@@ -1,24 +1,25 @@
-# DNS over HTTPS (DoH) Server
-
+# DNS over HTTPS (DoH) Proxy
 A lightweight Python implementation of a DNS over HTTPS (DoH) proxy server that supports receiving DNS requests, querying DNS from upstream DoH servers, and returning the results.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-## 🚀 Quick Start
+<details>
+<summary>🇨🇳 中文说明（点击展开 / Click to expand）</summary>
 
+# DNS over HTTPS (DoH) 代理服务器
+一个轻量级的 Python 实现的 DNS over HTTPS 代理服务器，支持接收普通 DNS 请求，向上游 DoH 服务商查询，并返回结果。
+
+## 🚀 快速开始
 ```bash
-# 1. Clone the repository
+# 1. 克隆仓库
 git clone git@github.com:crb912/SmartDoHProxy.git
-# 2. Configure
-nano config.toml  # Edit DNS port and DoH servers
-# 3. Run
+# 2. 配置
+nano config.toml # 编辑 DNS 监听端口和上游 DoH 服务商
+# 3. 运行
 sudo python3 /path_to_file/dns_doh_python/doh.py
-
-# If DNS sever bind error: [Errno 98] Address already in use. 
-# sudo ss -tulnp | grep :53 
-
-```
+# 如果出现绑定错误：[Errno 98] Address already in use
+# sudo ss -tulnp | grep :53
 
 Popular DoH Providers
 
@@ -133,5 +134,38 @@ sudo systemctl enable smart_doh_proxy
 sudo systemctl status smart_doh_proxy
 ```
 
+Main Features
+
+- Single-threaded, multi-coroutine asynchronous, lightweight design.
+The entire server operates in a single thread using asyncio, resulting in low resource consumption and high efficiency.
+Instant response on cache hit.
+- If a valid cached result (with unexpired TTL) is available, the server responds immediately. When the TTL expires, the cache entry is automatically refreshed in the background without delaying the client response.
+DNS query routing (splitting).
+- By default, queries are sent to the DoH servers listed in the direct servers group in the configuration file. If the queried domain matches the proxy rules (typically based on GFWList), the query is routed to the DoH servers in the proxy servers group.
+Bootstrap support.
+- Allows resolution of upstream DoH server domain names using a separate bootstrap DNS resolver.
+Deduplication of in-flight queries.
+- If a query for a specific domain is already in progress, any new identical query for the same domain is discarded immediately, preventing unnecessary upstream requests and reducing overhead.
+Negative caching support.
+- When an upstream DoH server returns NXDOMAIN (domain does not exist), the negative response is cached. No further queries for that domain will be sent until the negative cache TTL expires.
+Speed-optimized IP selection.
+- For domains that resolve to multiple IP addresses, the server performs TCP pings to all IPs and caches only the fastest-connecting one for future use. (This feature currently does not support proxy groups.)
+- Blacklist and whitelist support.
+Domains can be blocked or forced into specific routing by directly editing the designated JSON cache file; the program automatically detects and applies changes. Blacklist/whitelist functionality can be further enhanced in the future if needed.
+
+主要特性：
+
+- 单线程，多协程异步，轻量化的设计。
+- 缓存命中，即可响应。如果TTL过期，则后台自动更新缓存的结果。
+- 支持DNS分流。DNS默认查询直连组（配置文件中 direct servers）的DoH服务器 ; 如果当前待查询的域名与代理规则匹配（通常是GWFlist），则查询代理组(proxy servers)的DoH。
+- 支持Bootstrap。
+- 丢弃在进行中的重复查询。对于一个域名查询，如果查询任务已经进行，新进入的相同的查询任务会直接被丢弃，避免不必要的查询开销。
+- 支持负缓存。对于已经认定不存在的域名，即DoH 返回了NXDOMAIN的域名，缓存该负响应（Negative Caching）在TTL过期前不再查询。
+- 速度最优。用TCP ping同一个域名的多个IP，只缓存连接速度最快的IP。（该特性目前不支持代理组）
+- 支持黑名单和白名单，直接修改制定的json缓存文件即可，程序会自动读取。如果有需求，可后续优化黑白名单的功能。
+
 ## References
-- [DNS response msg format -HuaWeo](https://support.huawei.com/enterprise/zh/doc/EDOC1100174722/f917b5d7)
+
+- [DNS response msg format -HuaWei](https://support.huawei.com/enterprise/zh/doc/EDOC1100174722/f917b5d7)
+
+
