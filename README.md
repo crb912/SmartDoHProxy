@@ -1,25 +1,20 @@
-# DNS over HTTPS (DoH) Proxy
+# DNS over HTTPS (DoH) Proxy · DNS over HTTPS (DoH)
 A lightweight Python implementation of a DNS over HTTPS (DoH) proxy server that supports receiving DNS requests, querying DNS from upstream DoH servers, and returning the results.
-
+一个轻量级的 Python 实现的 DNS over HTTPS 代理服务器，支持接收来自本地的DNS请求，向上游 DoH 服务商查询，并返回查询结果。
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-<details>
-<summary>🇨🇳 中文说明（点击展开 / Click to expand）</summary>
-
-# DNS over HTTPS (DoH) 代理服务器
-一个轻量级的 Python 实现的 DNS over HTTPS 代理服务器，支持接收普通 DNS 请求，向上游 DoH 服务商查询，并返回结果。
-
-## 🚀 快速开始
+## 🚀 Quick Start · 快速开始
 ```bash
-# 1. 克隆仓库
+# 1. Clone the repository
 git clone git@github.com:crb912/SmartDoHProxy.git
-# 2. 配置
-nano config.toml # 编辑 DNS 监听端口和上游 DoH 服务商
-# 3. 运行
+# 2. Configure
+nano config.toml # Edit DNS port and DoH servers
+# 3. Run
 sudo python3 /path_to_file/dns_doh_python/doh.py
-# 如果出现绑定错误：[Errno 98] Address already in use
+# If DNS sever bind error: [Errno 98] Address already in use.
 # sudo ss -tulnp | grep :53
+```
 
 Popular DoH Providers
 
@@ -34,6 +29,7 @@ Popular DoH Providers
 
 ## 🧪 Test and Benchmark with dnsperf
 Test
+
 ```bash
 # Test DNS resolution
 dig @127.0.0.1 -p 5553 www.google.com   
@@ -56,6 +52,7 @@ EOF
 ```
 
 Run benchmark
+
 ```
 dnsperf -s 127.0.0.1 -p 5553 -t 10 -d q2.txt -Q 10000 -c 5 -l 60
 
@@ -66,6 +63,7 @@ Queries lost:         0 (0.00%)
 ```
 
 #### 2. Benchmark with dnsperf (cache miss)
+
 `dnsperf -s 127.0.0.1 -p 5553 -t 10 -d x.txt -Q 10000 -c 30 -l 60`
 
 Expected results (Python)  QPS: 132
@@ -92,10 +90,10 @@ How It Works
 3. **Cache Hit**: Returns cached result immediately, refreshes in background
 4. **Cache Miss**: Queries DoH provider(s) over HTTPS
 5. **Response**: Returns result and caches for future queries
-6. **Persistence**: Cache auto-saves every 3 days
+6. **Persistence**: Cache auto-saves
 
 
-## 🎯 Deploy as systemd Service (Linux)
+## 🎯 Deploy as systemd Service (Linux)  · 部署
 
 ```bash
 sudo nano /etc/systemd/system/smart_doh_proxy.service
@@ -122,11 +120,9 @@ CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
-
 ```
-
-
-```
+Command: 
+```bash
 sudo systemctl daemon-reload
 sudo systemctl start smart_doh_proxy
 # auto run
