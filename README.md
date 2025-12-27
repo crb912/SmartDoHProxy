@@ -4,6 +4,8 @@ A lightweight Python implementation of a DNS over HTTPS (DoH) proxy server that 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
+[DoH Proxy Golang Edition](https://github.com/crb912/DohProxyGo)
+
 ## 🚀 Quick Start · 快速开始
 ```bash
 # 1. Clone the repository
@@ -54,7 +56,7 @@ EOF
 Run benchmark
 
 ```
-dnsperf -s 127.0.0.1 -p 5553 -t 10 -d q2.txt -Q 10000 -c 5 -l 60
+dnsperf -s 127.0.0.1 -p 5553 -t 10 -d queries.txt -Q 10000 -c 5 -l 60
 
 Expected results (Python)
 Run time (s):  60, Queries per second:   2644
@@ -64,7 +66,7 @@ Queries lost:         0 (0.00%)
 
 #### 2. Benchmark with dnsperf (cache miss)
 
-`dnsperf -s 127.0.0.1 -p 5553 -t 10 -d x.txt -Q 10000 -c 30 -l 60`
+`dnsperf -s 127.0.0.1 -p 5553 -t 10 -d queries.txt -Q 10000 -c 30 -l 60`
 
 Expected results (Python)  QPS: 132
 
